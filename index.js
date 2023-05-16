@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 async function SearchMovies(movieTitle) {
     const res = await fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=41a510e&t=${movieTitle}`)
     const data = await res.json()
@@ -5,3 +6,5 @@ async function SearchMovies(movieTitle) {
 }
 
 SearchMovies('Blade Runner')
+=======
+>>>>>>> parent of a9ca46f (Update index.js)
