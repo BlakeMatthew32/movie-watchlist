@@ -100,3 +100,73 @@ body {
 .start > p {
     font-size: 1.125rem;
 }
+
+
+/* movie card styles */
+
+.movie-container {
+    padding-top: 2em;
+}
+
+.movie-card {
+    width: 85%;;
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    padding: 2em 0;
+    border-bottom: 2px solid rgba(44, 44, 44, 1);
+}
+
+.movie-card:last-of-type {
+    border-bottom: none;
+}
+
+.movie-card > img {
+    width: 130px;
+    height: 191px;
+    border-radius: 4px;;
+}
+
+.movie-info {
+    margin: 0 0 0 1.2em;
+}
+
+.title-container,
+.info-container {
+    display: flex;
+    align-items: center;
+}
+
+.title-container {
+    justify-content: space-between;
+}
+
+.info-container {
+    justify-content: space-between;
+    font-size: 0.75rem;
+}
+
+.title-container > h3 {
+    max-width: 80%;
+    font-size: 1.125rem;
+}
+
+.info-container > button {
+    cursor: pointer;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    background-color: inherit;
+    border: none;
+    color: #ffffff;
+}
+
+.info-container > button > img {
+    margin-right: 0.4em;
+    width: 16px;
+}
+
+.movie-plot {
+    color: rgba(165, 165, 165, 1);
+    font-size: 0.875rem;
+}
