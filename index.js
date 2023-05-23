@@ -3,12 +3,15 @@ const filmNameInput = document.getElementById('film-name-input')
 const searchForm = document.getElementById('search-form')
 const movieContainer = document.getElementById('movie-container')
 
+let movieData = []
+let watchlistData = []
 
 searchForm.addEventListener('submit', handleSearch)
+movieContainer.addEventListener('click', addToWatchlist)
 
 // Search for movies based on input file title/keyword
 async function SearchMovies(movieTitle) {
-    const res = await fetch(`http://www.omdbapi.com/?apikey=41a510e&s=${movieTitle}`)
+    const res = await fetch(`http://www.omdbapi.com/?apikey=41a510e&s=${movieTitle}&type=movie`)
     const data = await res.json()
     return data.Search
 }
@@ -42,15 +45,24 @@ async function handleSearch(event) {
 
 
 function renderSearchList(movies) {
-    let searchListHtml = ''
+    let moviesHtml = ''
 
     if(movies) {
         for (let movie of movies) {
-            searchListHtml += getMovieCardHtml(movie)
+
+            let movieCardHtml = getMovieCardHtml(movie)
+
+            movieData.push({
+                movieId: movie.imdbID,
+                movieHtml: movieCardHtml
+            })
+
+            moviesHtml += movieCardHtml
         }
     }
+    console.log(movieData)
 
-    movieContainer.innerHTML = searchListHtml
+    movieContainer.innerHTML = moviesHtml
 }
 
 // need to search for the individual films from the api to get the plot, rating and tags
@@ -69,12 +81,21 @@ function getMovieCardHtml(movie) {
                 <div class='info-container'>
                     <p>${movie.Runtime}</p>
                     <p>${movie.Genre}</p>
-                    <button><img src='images/IconPlus.png'> Watchlist</button>
+                    <button id=${movie.imdbID}><img src='images/IconPlus.png'> Watchlist</button>
                 </div>
                 <p class='movie-plot'>${movie.Plot}</p>
             </div>
         </div>
     `
 }
+
+function addToWatchlist(event) {
+    console.log(event.target.id)
+
+    const movieToAdd = movieData.filter(movie => movie.movieId === event.target.id)
+
+    console.log(movieToAdd)
+}
+
 
 // SearchMovies('batman')
