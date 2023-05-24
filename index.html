@@ -18,7 +18,7 @@
         <nav class="nav-bar">
             <div class="title">
                 <h1>Find your film</h1>
-                <a href="watchlist.html" class="page-link">My Watchlist</a>
+                <button id="watchlist-button" class="watchlist-button">My Watchlist</button>
             </div>
             <form id="search-form">
                 <div class="input-field">
@@ -29,10 +29,20 @@
             </form>
         </nav>   
         <main id="movie-container" class="movie-container">
-            <div class="start">
-                <img src="images/Icon.png">
-                <p>Start exploring</p>
+
+            <div class="search-list" id="search-list-container">
+                <div class="center">
+                    <img src="images/Icon.png">
+                    <p>Start exploring</p>
+                </div>
             </div>
+
+            <div class="watchlist hidden" id="watchlist-container">
+                <div class="center">
+                    <p>Your watchlist is looking a little empty...</p>
+                </div>
+            </div>
+            
         </main> 
         <script src="index.js" async defer></script>
     </body>

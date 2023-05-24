@@ -39,12 +39,14 @@ body {
 }
 
 .title > h1 {
-    cursor: pointer;
     font-size: 2.625rem;
     font-weight: 700;
 }
 
-.page-link {
+.watchlist-button {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
     font-size: 0.875rem;
     font-weight: 600;
     text-decoration: none;
@@ -90,16 +92,6 @@ body {
 /* main/movie section styles */
 
 
-.start {
-    text-align: center;
-    margin: 30% 0 0;
-    color: rgb(46, 46, 47);
-    font-weight: bold;
-}
-
-.start > p {
-    font-size: 1.125rem;
-}
 
 
 /* movie card styles */
@@ -169,4 +161,23 @@ body {
 .movie-plot {
     color: rgba(165, 165, 165, 1);
     font-size: 0.875rem;
+}
+
+
+
+/* utilities */
+
+.center {
+    text-align: center;
+    margin: 30% 0 0;
+    color: rgb(46, 46, 47);
+    font-weight: bold;
+}
+
+.center > p {
+    font-size: 1.125rem;
+}
+
+.hidden {
+    display: none;
 }

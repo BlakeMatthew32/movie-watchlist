@@ -1,13 +1,17 @@
 
-const filmNameInput = document.getElementById('film-name-input')
+const movieInputValue = document.getElementById('film-name-input')
 const searchForm = document.getElementById('search-form')
-const movieContainer = document.getElementById('movie-container')
+const searchListContainer = document.getElementById('search-list-container')
+const watchlistContainer = document.getElementById('watchlist-container')
+const watchlistButton = document.getElementById('watchlist-button')
+
 
 let movieData = []
 let watchlistData = []
 
 searchForm.addEventListener('submit', handleSearch)
-movieContainer.addEventListener('click', addToWatchlist)
+searchListContainer.addEventListener('click', addToWatchlist)
+watchlistButton.addEventListener('click', openWatchlist)
 
 // Search for movies based on input file title/keyword
 async function SearchMovies(movieTitle) {
@@ -15,7 +19,6 @@ async function SearchMovies(movieTitle) {
     const data = await res.json()
     return data.Search
 }
-
 
 // Get movie info from returned films
 async function SearchMovieInfo(movie) {
@@ -25,14 +28,17 @@ async function SearchMovieInfo(movie) {
 }
 
 
+// EVENT FUNCTIONS 
+
+// get movies data from api and store in list 
 async function handleSearch(event) {
     event.preventDefault()
     
     const searchedMovies = []
-    // console.log(filmNameInput.value) remove later
+    movieData = []
 
-    if(filmNameInput.value) {
-        const movies = await SearchMovies(filmNameInput.value)
+    if(movieInputValue.value) {
+        const movies = await SearchMovies(movieInputValue.value)
 
         for (let movie of movies) {
             searchedMovies.push(await SearchMovieInfo(movie))
@@ -40,8 +46,29 @@ async function handleSearch(event) {
         
     }
 
-    renderSearchList(searchedMovies)
+    for(let movie of searchedMovies) {
+        movieData.push({
+            movieId: movie.imdbID,
+            movieHtml: getMovieCardHtml(movie)
+        })
+    }
+    
+    renderSearchList(movieData)
 }
+
+function openWatchlist() {
+    watchlistContainer.classList.toggle('hidden')
+    searchListContainer.classList.toggle('hidden')
+}
+
+function addToWatchlist(event) {
+    console.log(event.target.id)
+
+    const movieToAdd = movieData.filter(movie => movie.movieId === event.target.id)
+    watchlistData.push(movieToAdd[0])
+    renderWatchlist()
+}
+
 
 
 function renderSearchList(movies) {
@@ -49,27 +76,41 @@ function renderSearchList(movies) {
 
     if(movies) {
         for (let movie of movies) {
+            moviesHtml += movie.movieHtml
 
-            let movieCardHtml = getMovieCardHtml(movie)
-
-            movieData.push({
-                movieId: movie.imdbID,
-                movieHtml: movieCardHtml
-            })
-
-            moviesHtml += movieCardHtml
         }
+        
+        searchListContainer.innerHTML = moviesHtml
+    } else {
+        searchListContainer.innerHTML = `
+            <div class="center">
+                <img src="images/Icon.png">
+                <p>Start exploring</p>
+            </div>
+        `
     }
-    console.log(movieData)
-
-    movieContainer.innerHTML = moviesHtml
 }
 
-// need to search for the individual films from the api to get the plot, rating and tags
+function renderWatchlist() {
+    let watchlistHtml = ''
+
+    if(watchlistData) {
+        for (let movie of watchlistData) {
+            watchlistHtml += movie.movieHtml
+        }
+        
+        watchlistContainer.innerHTML = watchlistHtml
+    } else {
+        watchlistContainer.innerHTML = `
+            <div class="center">
+                <p>Your watchlist is looking a little empty...</p>
+            </div>
+        `
+    }
+
+}
 
 function getMovieCardHtml(movie) {
-
-    // template of the movie card to be created from the data.
     return `
         <div class="movie-card">
             <img src=${movie.Poster} />
@@ -88,14 +129,3 @@ function getMovieCardHtml(movie) {
         </div>
     `
 }
-
-function addToWatchlist(event) {
-    console.log(event.target.id)
-
-    const movieToAdd = movieData.filter(movie => movie.movieId === event.target.id)
-
-    console.log(movieToAdd)
-}
-
-
-// SearchMovies('batman')
