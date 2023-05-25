@@ -38,22 +38,24 @@ async function handleSearch(event) {
     movieData = []
 
     if(movieInputValue.value) {
-        const movies = await SearchMovies(movieInputValue.value)
+        const moviesRes = await SearchMovies(movieInputValue.value)
+        const movieIdArr =  moviesRes.map(movie => movie.imdbID)
+        console.log(movieIdArr)
 
-        for (let movie of movies) {
-            searchedMovies.push(await SearchMovieInfo(movie))
-        }
+    //     for (let movie of movies) {
+    //         searchedMovies.push(await SearchMovieInfo(movie))
+    //     }
         
     }
 
-    for(let movie of searchedMovies) {
-        movieData.push({
-            movieId: movie.imdbID,
-            movieHtml: getMovieCardHtml(movie)
-        })
-    }
+    // for(let movie of searchedMovies) {
+    //     movieData.push({
+    //         movieId: movie.imdbID,
+    //         movieHtml: getMovieCardHtml(movie)
+    //     })
+    // }
     
-    renderSearchList(movieData)
+    // renderSearchList(movieData)
 }
 
 function openWatchlist() {
@@ -64,32 +66,17 @@ function openWatchlist() {
 function addToWatchlist(event) {
     console.log(event.target.id)
 
-    const movieToAdd = movieData.filter(movie => movie.movieId === event.target.id)
-    watchlistData.push(movieToAdd[0])
-    renderWatchlist()
-}
-
-
-
-function renderSearchList(movies) {
-    let moviesHtml = ''
-
-    if(movies) {
-        for (let movie of movies) {
-            moviesHtml += movie.movieHtml
-
-        }
-        
-        searchListContainer.innerHTML = moviesHtml
-    } else {
-        searchListContainer.innerHTML = `
-            <div class="center">
-                <img src="images/Icon.png">
-                <p>Start exploring</p>
-            </div>
-        `
+    const movieToAdd = movieData.filter(movie => movie.movieId === event.target.id)[0]
+    console.log(!watchlistData.includes(movieToAdd))
+    if (!watchlistData.includes(movieToAdd)) { 
+        watchlistData.push(movieToAdd)
+        renderWatchlist()
     }
 }
+
+
+
+
 
 function renderWatchlist() {
     let watchlistHtml = ''
@@ -111,6 +98,8 @@ function renderWatchlist() {
 }
 
 function getMovieCardHtml(movie) {
+    const buttonHtml = getButtonHtml(movie)
+
     return `
         <div class="movie-card">
             <img src=${movie.Poster} />
@@ -129,3 +118,20 @@ function getMovieCardHtml(movie) {
         </div>
     `
 }
+
+function getButtonHtml(movie) {
+    if (!watchlist.includes(movie)) {
+        return `<button id=${movie.imdbID} data-action='add'><img src='images/IconPlus.png'> Watchlist</button>`
+    } else {
+        return `<button id=${movie.imdbID} data-action'remove'><img src='images/IconPlus.png'> Watchlist</button>`
+    }
+}
+
+
+//  TODO 
+
+// need to make a way for the watchlist to track what is in it so that the button to add to the watchlist
+// has different text '(-) Remove', also want this behaviour to be mirrored in the search list or to now show
+// movies already in the watch list.
+
+// store watch list in local storage to render on load.

@@ -16,34 +16,44 @@
     </head>
     <body>
         <nav class="nav-bar">
+
             <div class="title">
                 <h1>Find your film</h1>
                 <button id="watchlist-button" class="watchlist-button">My Watchlist</button>
             </div>
+
             <form id="search-form">
+                <!-- form is used so, in the future more options can be added -->
                 <div class="input-field">
                     <img src="images/Search.png" />
                     <input id="film-name-input" name="film-name" type="text" value="" placeholder="Enter Film">
                     <button class="btn" type="submit">Search</button>
                 </div>
+
             </form>
+
         </nav>   
+
         <main id="movie-container" class="movie-container">
 
             <div class="search-list" id="search-list-container">
+
                 <div class="center">
                     <img src="images/Icon.png">
                     <p>Start exploring</p>
                 </div>
+
             </div>
 
             <div class="watchlist hidden" id="watchlist-container">
+
                 <div class="center">
                     <p>Your watchlist is looking a little empty...</p>
                 </div>
+
             </div>
             
         </main> 
-        <script src="index.js" async defer></script>
+        <script src="test.js" async defer></script>
     </body>
 </html>
