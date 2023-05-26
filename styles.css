@@ -43,14 +43,17 @@ body {
     font-weight: 700;
 }
 
-.watchlist-button {
-    cursor: pointer;
-    background-color: transparent;
-    border: none;
-    font-size: 0.875rem;
-    font-weight: 600;
-    text-decoration: none;
+.btn-watchlist {
+    padding: 0.6em 1em;
+    background-color: rgba(0, 0, 0, 0.6);
     color: rgb(255, 255, 255);
+    border-radius: 4px;
+    box-shadow: 1px 1px 10px rgba(255, 255, 255, 0.3);
+    font-weight: 600;
+}
+
+.btn-watchlist:hover {
+    background-color: rgb(75, 75, 75);
 }
 
 .input-field {
@@ -78,23 +81,17 @@ body {
     color: rgb(165, 165, 165);
 }
 
-.input-field > .btn {
+.input-field .btn {
     font-family: inherit;
-    cursor: pointer;
     background-color: rgb(75, 75, 75);
-    border: none;
     padding: 0.7em 2.5em;
     border-radius: 0 7px 7px 0;
     color: rgb(255, 255, 255);
 }
 
 
-/* main/movie section styles */
-
-
-
-
 /* movie card styles */
+
 
 .movie-container {
     padding-top: 2em;
@@ -143,14 +140,18 @@ body {
     font-size: 1.125rem;
 }
 
-.info-container > button {
-    cursor: pointer;
-    font-size: 0.75rem;
-    display: flex;
-    align-items: center;
+.btn-add,
+.btn-remove {
     background-color: inherit;
-    border: none;
-    color: #ffffff;
+
+}
+
+.btn-add {
+    color: #0eb535;
+}
+
+.btn-remove {
+    color: #c40808;
 }
 
 .info-container > button > img {
@@ -164,8 +165,8 @@ body {
 }
 
 
-
 /* utilities */
+
 
 .center {
     text-align: center;
@@ -180,4 +181,16 @@ body {
 
 .hidden {
     display: none;
+}
+
+.btn {
+    cursor: pointer;
+    font-size: 0.825rem;
+    display: flex;
+    align-items: center;
+    border: none;
+}
+
+.btn:hover {
+    transform:scale(1.1);
 }

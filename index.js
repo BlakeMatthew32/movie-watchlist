@@ -5,85 +5,123 @@ const searchListContainer = document.getElementById('search-list-container')
 const watchlistContainer = document.getElementById('watchlist-container')
 const watchlistButton = document.getElementById('watchlist-button')
 
-
-let movieData = []
-let watchlistData = []
-
 searchForm.addEventListener('submit', handleSearch)
-searchListContainer.addEventListener('click', addToWatchlist)
 watchlistButton.addEventListener('click', openWatchlist)
 
+document.getElementById('movie-container').addEventListener('click', (event) => {
+    const action = event.target.dataset.action
+
+    switch (action) {
+        case 'add': 
+            handleAddAction(event)
+            break
+        case 'remove':
+            handleRemoveAction(event)
+            break
+        default:
+            console.log('watchlist button not press!')
+    }
+})
+
+let moviesInfo = []
+const watchlist = []
+
+/** API interaction/request functions **/
+
 // Search for movies based on input file title/keyword
-async function SearchMovies(movieTitle) {
+async function fetchMovies(movieTitle) {
     const res = await fetch(`http://www.omdbapi.com/?apikey=41a510e&s=${movieTitle}&type=movie`)
     const data = await res.json()
     return data.Search
 }
 
 // Get movie info from returned films
-async function SearchMovieInfo(movie) {
-    const res = await fetch(`http://www.omdbapi.com/?apikey=41a510e&i=${movie.imdbID}`)
+async function fetchMovieInfo(movieId) {
+    const res = await fetch(`http://www.omdbapi.com/?apikey=41a510e&i=${movieId}`)
     const data = await res.json()
-    return await data
+    return data
 }
 
 
-// EVENT FUNCTIONS 
+/** Event listener functions **/
 
 // get movies data from api and store in list 
 async function handleSearch(event) {
     event.preventDefault()
-    
-    const searchedMovies = []
-    movieData = []
+
+    // clear the global moviesInfo array on every new search
+    // may not need to be global 
+    moviesInfo = []
 
     if(movieInputValue.value) {
-        const moviesRes = await SearchMovies(movieInputValue.value)
-        const movieIdArr =  moviesRes.map(movie => movie.imdbID)
-        console.log(movieIdArr)
+        const moviesRes = await fetchMovies(movieInputValue.value)
 
-    //     for (let movie of movies) {
-    //         searchedMovies.push(await SearchMovieInfo(movie))
-    //     }
-        
+        for (let movie of moviesRes) {
+            const movieInfo = await fetchMovieInfo(movie.imdbID)
+            moviesInfo.push(movieInfo)
+        }
+
     }
 
-    // for(let movie of searchedMovies) {
-    //     movieData.push({
-    //         movieId: movie.imdbID,
-    //         movieHtml: getMovieCardHtml(movie)
-    //     })
-    // }
+    renderSearchMovies(moviesInfo)
+}
+
+function handleAddAction(event) {
+
+    const movieSelected = moviesInfo.filter(movie => movie.imdbID === event.target.id)[0]
+
+    if (!watchlist.includes(movieSelected)) { 
+        watchlist.push(movieSelected)
+        renderWatchlist(watchlist)
+        renderSearchMovies(moviesInfo)
+    }
+
+}
+
+function handleRemoveAction(event) {
     
-    // renderSearchList(movieData)
+    const movieSelected = watchlist.filter(movie => movie.imdbID === event.target.id)[0]
+
+    watchlist.splice(watchlist.indexOf(movieSelected), 1)
+    renderWatchlist(watchlist)
+    renderSearchMovies(moviesInfo)
+
 }
 
 function openWatchlist() {
     watchlistContainer.classList.toggle('hidden')
     searchListContainer.classList.toggle('hidden')
+    searchForm.classList.toggle('hidden')
 }
 
-function addToWatchlist(event) {
-    console.log(event.target.id)
+/** Render fucntions **/
 
-    const movieToAdd = movieData.filter(movie => movie.movieId === event.target.id)[0]
-    console.log(!watchlistData.includes(movieToAdd))
-    if (!watchlistData.includes(movieToAdd)) { 
-        watchlistData.push(movieToAdd)
-        renderWatchlist()
+function renderSearchMovies(movies) {
+    let moviesHtml = ''
+
+    if(movies) {
+        for (let movie of movies) {
+            moviesHtml += getMovieCardHtml(movie)
+
+        }
+        
+        searchListContainer.innerHTML = moviesHtml
+    } else {
+        searchListContainer.innerHTML = `
+            <div class="center">
+                <img src="images/Icon.png">
+                <p>Start exploring</p>
+            </div>
+        `
     }
 }
 
-
-
-
-
-function renderWatchlist() {
+function renderWatchlist(watchlist) {
     let watchlistHtml = ''
 
-    if(watchlistData) {
-        for (let movie of watchlistData) {
-            watchlistHtml += movie.movieHtml
+    if(watchlist.length > 0) {
+        for (let movie of watchlist) {
+            watchlistHtml += getMovieCardHtml(movie)
         }
         
         watchlistContainer.innerHTML = watchlistHtml
@@ -111,7 +149,7 @@ function getMovieCardHtml(movie) {
                 <div class='info-container'>
                     <p>${movie.Runtime}</p>
                     <p>${movie.Genre}</p>
-                    <button id=${movie.imdbID}><img src='images/IconPlus.png'> Watchlist</button>
+                    ${buttonHtml}
                 </div>
                 <p class='movie-plot'>${movie.Plot}</p>
             </div>
@@ -121,17 +159,8 @@ function getMovieCardHtml(movie) {
 
 function getButtonHtml(movie) {
     if (!watchlist.includes(movie)) {
-        return `<button id=${movie.imdbID} data-action='add'><img src='images/IconPlus.png'> Watchlist</button>`
+        return `<button class='btn btn-add' id=${movie.imdbID} data-action='add'><img src='images/IconPlus.png'> Watchlist</button>`
     } else {
-        return `<button id=${movie.imdbID} data-action'remove'><img src='images/IconPlus.png'> Watchlist</button>`
+        return `<button class='btn btn-remove' id=${movie.imdbID} data-action='remove'><img src='images/IconRemove.png'> Watchlist</button>`
     }
 }
-
-
-//  TODO 
-
-// need to make a way for the watchlist to track what is in it so that the button to add to the watchlist
-// has different text '(-) Remove', also want this behaviour to be mirrored in the search list or to now show
-// movies already in the watch list.
-
-// store watch list in local storage to render on load.
