@@ -8,6 +8,9 @@ const watchlistButton = document.getElementById('watchlist-button')
 searchForm.addEventListener('submit', handleSearch)
 watchlistButton.addEventListener('click', openWatchlist)
 
+let moviesInfo = []
+const watchlist = []
+
 document.getElementById('movie-container').addEventListener('click', (event) => {
     const action = event.target.dataset.action
 
@@ -22,9 +25,6 @@ document.getElementById('movie-container').addEventListener('click', (event) => 
             console.log('watchlist button not press!')
     }
 })
-
-let moviesInfo = []
-const watchlist = []
 
 /** API interaction/request functions **/
 
@@ -92,6 +92,12 @@ function openWatchlist() {
     watchlistContainer.classList.toggle('hidden')
     searchListContainer.classList.toggle('hidden')
     searchForm.classList.toggle('hidden')
+    if (watchlistContainer.classList.contains('hidden')) {
+        console.log('here')
+        watchlistButton.textContent = 'watchlist'
+    } else {
+        watchlistButton.textContent = 'search'
+    }
 }
 
 /** Render fucntions **/
@@ -158,7 +164,12 @@ function getMovieCardHtml(movie) {
 }
 
 function getButtonHtml(movie) {
-    if (!watchlist.includes(movie)) {
+    let watchlistImdbId = []
+    if(watchlist) {
+        watchlistImdbId = watchlist.map(movie => movie.imdbID);
+    }
+    console.log(movie.imdbID)
+    if (!watchlistImdbId.includes(movie.imdbID)) {
         return `<button class='btn btn-add' id=${movie.imdbID} data-action='add'><img src='images/IconPlus.png'> Watchlist</button>`
     } else {
         return `<button class='btn btn-remove' id=${movie.imdbID} data-action='remove'><img src='images/IconRemove.png'> Watchlist</button>`
